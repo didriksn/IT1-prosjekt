@@ -1,0 +1,164 @@
+:root{
+  --bg:#000000;
+  --mat:rgb(255, 255, 255);
+  --frame-dark:#6b4427; /* darker wood tone */
+  --frame-light:#c6944f; /* lighter wood tone */
+  --card:#ffffff;
+  --muted:#6b6b7a;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{
+  font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg);
+  color:#222;
+}
+
+/* Make the frame act as a decorative border around the window.
+   We draw an outer wood layer with ::before and an inner 'mat' inset
+   with ::after so the center is available for content. */
+.frame{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:auto;
+}
+
+/* Outer wooden frame */
+.frame::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg,var(--frame-light),var(--frame-dark));
+  z-index:0;
+}
+
+/* Inner mat inset — this covers the center so only the border shows the wood */
+.frame::after{
+  content:"";
+  position:absolute;
+  inset:20px; /* slightly thicker visible border (smaller inset) */
+  background:var(--mat);
+  border-radius:4px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.12);
+  z-index:1;
+}
+
+/* Game container sits above the mat */
+.frame > #game-container{
+  position:relative;
+  z-index:2;
+  max-width:1100px;
+  width:calc(100% - 120px);
+  background:transparent; /* mat is provided by ::after */
+  padding:28px;
+  border-radius:6px;
+  text-align:center;
+}
+
+/* Content card inside the mat */
+#game-container > div, #game-container > input, #game-container > button, #game-container h1, #game-container p, #game-container #result-display{
+  margin-bottom:12px;
+}
+
+#game-container h1{margin:0 0 6px 0}
+#game-container p{margin:0 0 12px 0;color:var(--muted)}
+
+/* smaller, less-wide guess input; center the text so numbers look tidy */
+input[type=text], input[type=number]{padding:12px 14px;font-size:1.05rem;border-radius:0;border:2px solid #28a745;margin-right:0;min-width:180px;text-align:center;background:white}
+
+input[type=text]:focus, input[type=number]:focus{
+  outline: none;
+  border-color: #1e7e34;
+  box-shadow: 0 0 0 6px rgba(40,167,69,0.12);
+}
+
+/* hide native number input arrows in case type=number is used on some browsers */
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  appearance: textfield;
+  -moz-appearance: textfield; /* firefox */
+}
+/* Make the submit button visually match the input: same border, height, and square corners. */
+button{
+  background: white;
+  color: #1e7e34;
+  border:2px solid #28a745;
+  padding:12px 14px;
+  font-size:1.05rem;
+  border-radius:0;
+  cursor:pointer;
+}
+
+/* Remove the inner dividing borders so input+button look like a single control */
+/* Input right edge removed */
+input[type=text], input[type=number]{ border-right: none }
+/* Button left edge removed */
+button{ border-left: none; position:relative }
+
+/* Ensure button and input align and keep equal height on small screens */
+button, input[type=text], input[type=number]{ display:inline-flex; align-items:center; justify-content:center }
+
+@media (max-width:700px){
+  .frame::after{inset:14px}
+  .frame > #game-container{width:100%}
+}
+
+button::before{ content:''; position:absolute; left:0; top:0; bottom:0; width:2px; background:#28a745 }
+
+/* Button left edge removed */
+/* draw an internal divider matching the border color so input and button appear attached */
+/* Ornate corner decorations (SVG data-URI) */
+.corner{
+  position:absolute;
+  width:72px;
+  height:72px;
+  background-repeat:no-repeat;
+  background-size:72px 72px;
+  z-index:2;
+  pointer-events:none;
+  opacity:0.95;
+}
+
+/* ornate SVG background and positions */
+.corner{background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><g fill='none' stroke='%236b4427' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'><path d='M12 90 C30 30, 60 18, 78 42 C90 60, 110 70, 108 108' /><path d='M108 12 C78 30, 60 42, 42 60 C30 72, 18 90, 12 108' /></g></svg>");}
+.corner.tl{ top:6px; left:6px; transform:rotate(0deg); }
+.corner.tr{ top:6px; right:6px; transform:rotate(90deg); }
+.corner.br{ bottom:6px; right:6px; transform:rotate(180deg); }
+.corner.bl{ bottom:6px; left:6px; transform:rotate(270deg); }
+
+@media (max-width:700px){
+  .corner{ width:48px; height:48px; background-size:48px 48px }
+  .corner.tl{ top:8px; left:8px }
+  .corner.tr{ top:8px; right:8px }
+  .corner.br{ bottom:8px; right:8px }
+  .corner.bl{ bottom:8px; left:8px }
+}
+
+/* Artwork display styles */
+.artwork{ text-align:center; max-width:760px; margin:0 auto }
+.artwork .art-image{ margin-top:10px; background: #fff; padding:8px; border-radius:6px; box-shadow:0 6px 18px rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; height:380px; width:100%; overflow:hidden; position:relative }
+.artwork .art-image img{ max-width:100%; max-height:100%; object-fit:contain; display:block }
+.artwork h2{ margin:0; font-size:1.25rem }
+.muted{ color:var(--muted); margin-top:6px }
+
+.guess-area label{ display:block; font-weight:600; margin-bottom:6px }
+.guess-row{ display:flex; gap:0; align-items:center }
+#centered .guess-row{ justify-content:center }
+.guess-row{ justify-content:center; flex-wrap:wrap }
+/* Overlay that appears on top of the image to show results */
+.overlay{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; padding:12px; text-align:center; background:rgba(0,0,0,0.55); color:#fff; font-weight:600; border-radius:6px; backdrop-filter:blur(3px); z-index:5 }
+.hidden{ display:none !important }
+
+@media (max-width:700px){
+  .artwork .art-image{ max-height:260px }
+  .artwork .art-image img{ max-height:260px }
+}
+
