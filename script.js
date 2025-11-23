@@ -5,7 +5,7 @@ const artwork = {
 	title: 'Sample Artwork',
 	artist: 'Unknown Artist',
 	year: '2025',
-	image: 'assets/printable-number-1-silhouette.png',
+	image: 'assets\\Mona_Lisa,_by_Leonardo_da_Vinci,_from_C2RMF_retouched.jpg',
 	// set a mock auction price (in USD). Replace with real values later.
 	price: 75000
 };
@@ -24,11 +24,13 @@ function formatCurrency(n){
 }
 
 function init(){
-	artTitle.textContent = artwork.title;
-	artMeta.textContent = `${artwork.artist} — `;
-	artYear.textContent = artwork.year;
-	artImg.src = artwork.image;
-	artImg.alt = `${artwork.title} by ${artwork.artist}`;
+  artTitle.textContent = artwork.title;
+  artMeta.textContent = `${artwork.artist} — `;
+  artYear.textContent = artwork.year;
+  artImg.src = artwork.image;
+  artImg.alt = `${artwork.title} by ${artwork.artist}`;
+  // don't pre-fill dollar sign; show it only when user types digits
+  if (guessInput) guessInput.value = '';
 }
 
 function showResult(guess){
@@ -48,10 +50,9 @@ function showResult(guess){
 
 // Helper: convert formatted value (with spaces) to number
 function parseGuess(value){
-	const digits = String(value).replace(/\s+/g, '');
+	// remove any non-digit characters (including dollar sign and spaces)
+	const digits = String(value).replace(/\D+/g, '');
 	if (digits === '') return NaN;
-	// only digits allowed
-	if (!/^\d+$/.test(digits)) return NaN;
 	try{ return Number(digits); }catch{ return NaN }
 }
 
@@ -76,14 +77,21 @@ guessInput.addEventListener('keydown', (e)=>{
 guessInput.addEventListener('input', ()=>{
 	if (overlay) overlay.classList.add('hidden');
 	// Live-format the input with spaces every three digits
-	const pos = guessInput.selectionStart;
 	const raw = guessInput.value;
 	// keep only digits
-	const digits = raw.replace(/\D+/g, '');
+	let digits = raw.replace(/\D+/g, '');
+	// remove leading zeros so user can't type 0 as the first digit
+	digits = digits.replace(/^0+/, '');
+	if (!digits) {
+		// no digits -> clear input (no $ prefix)
+		guessInput.value = '';
+		return;
+	}
 	// format with space as thousands separator
 	const formatted = digits.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-	guessInput.value = formatted;
-	// move caret to the end (simple but reliable)
+	// prefix with dollar sign when there are digits
+	guessInput.value = `$${formatted}`;
+	// move caret to the end
 	guessInput.setSelectionRange(guessInput.value.length, guessInput.value.length);
 });
 
