@@ -1,13 +1,13 @@
-# Auction Guess — Art Price Game
+# Auksjonsgjetning — Kunstpris-spill
 
-Open `index.html` in a browser to play a small game where you guess how much artworks sold for at auction.
+Åpne `index.html` i en nettleser for å spille et lite spill hvor du gjetter hvor mye kunstverk ble solgt for på auksjon.
 
-Gameplay:
-- The page shows an artwork (image, title, artist).
-- Enter your USD guess and submit.
-- You can reveal the actual sale price (and points) and move to the next round.
-- Game is 5 rounds by default; closer guesses score more points.
+Slik spiller du:
+- Siden viser et kunstverk (bilde, tittel, kunstner).
+- Skriv inn ditt gjett i NOK og send.
+- Du kan avsløre den faktiske salgsprisen (og poeng) og gå videre til neste runde.
+- Spillet bruker som standard alle oppførte runder; nærmere gjetning gir flere poeng.
 
-Notes:
-- Images are pulled from Unsplash for demonstration; an internet connection is required to load images.
-- To change artwork data, edit `script.js` and update the `artworks` array.
+Notater:
+- Bilder i eksemplene kan komme fra eksterne kilder; internettforbindelse kan være nødvendig for å laste dem.
+- For å endre kunstdata, rediger `script.js` og oppdater `artworks`-arrayet.

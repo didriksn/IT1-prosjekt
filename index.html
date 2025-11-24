@@ -1,33 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nb">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Auction Guess — Art Price Game</title>
+    <title>Auksjonsgjettespill</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div class="frame">
       <div id="game-container">
-        <h1>Auction Guess</h1>
-        <p>Guess the auction price of the artwork!</p>
+        <h1>Auksjonsgjettespill</h1>
+        <p>Gjett prisen kunstverket ble solgt for på auksjon!</p>
+        <div class="content-body">
+          <section id="artwork-display" class="artwork">
+            <div class="round-indicator">Runde <span id="round-num">1</span> / <span id="total-rounds">1</span></div>
+            <h2 id="art-title"></h2>
+            <p id="art-meta" class="muted"><span id="art-year"></span></p>
+            <div class="art-image">
+              <img id="art-img" alt="Kunstverk" />
+              <div id="overlay" class="overlay hidden" aria-live="polite"></div>
+            </div>
+          </section>
 
-        <section id="artwork-display" class="artwork">
-          <h2 id="art-title">Untitled</h2>
-          <p id="art-meta" class="muted">Unknown — <span id="art-year">?</span></p>
-          <div class="art-image">
-            <img id="art-img" alt="Artwork" />
-            <div id="overlay" class="overlay hidden" aria-live="polite"></div>
-          </div>
-        </section>
-
-        <section id="guess-area" class="guess-area">
-          <label for="price-guess">Your guess (USD)</label>
-          <div class="guess-row">
-            <input type="text" inputmode="numeric" pattern="[0-9\s]*" id="price-guess" placeholder="$0" />
-            <button id="submit-guess">Submit Guess</button>
-          </div>
-        </section>
+          <section id="guess-area" class="guess-area">
+            <label for="price-guess">Din gjetning (NOK)</label>
+            <div class="guess-row">
+              <input type="text" inputmode="numeric" pattern="[0-9\s]*" id="price-guess" placeholder="kr 0"
+                autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
+              <button id="submit-guess">Send gjetning</button>
+            </div>
+          </section>
+        </div>
       </div>
     </div>
 

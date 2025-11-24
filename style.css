@@ -22,9 +22,13 @@ body{
   position:fixed;
   inset:0;
   display:flex;
-  align-items:center;
+  /* place content toward the top of the window */
+  align-items:flex-start;
   justify-content:center;
-  overflow:auto;
+  /* add some top padding so the header isn't flush against the mat */
+  padding-top:28px;
+  /* prevent page-level scrolling; allow internal scrolling inside the card */
+  overflow:hidden;
 }
 
 /* Outer wooden frame */
@@ -54,18 +58,76 @@ body{
   max-width:1100px;
   width:calc(100% - 120px);
   background:transparent; /* mat is provided by ::after */
-  padding:28px;
+  /* reduce top padding so header sits higher in the viewport */
+  padding:14px 28px;
   border-radius:6px;
   text-align:center;
 }
+
+/* Round indicator base style (will be positioned over artwork via .artwork selector) */
+.round-indicator{
+  background:rgba(255,255,255,0.95);
+  padding:6px 10px;
+  border-radius:6px;
+  font-weight:700;
+  color:#333;
+  z-index:4;
+  display:inline-block;
+}
+
+/* The content body contains the artwork and guess controls. Keep the header
+  at the top of the mat, but vertically center the rest of the game inside
+  the viewport by giving this container a large min-height and centering. */
+.content-body{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  /* occupy most of the viewport height so its children appear centered
+    below the header that sits near the top */
+  min-height: calc(100vh - 140px);
+  width:100%;
+}
+
+/* Artwork container: relative so the round-indicator can be placed above the title */
+.artwork{ position:relative }
+
+/* position the round indicator centered above the artwork title; prevent wrapping */
+.artwork .round-indicator{
+  position:absolute;
+  top:-48px;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:3;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  max-width:80%;
+}
+
+/* keep the game container visible without showing a scrollbar in the
+   middle of the viewport; avoid internal scrollbars by allowing content
+   to flow and be clipped by the outer fixed frame if viewport is too small.
+   (If you prefer internal scrolling on small screens we can re-enable this.) */
+.frame > #game-container{
+  max-height: none;
+  overflow: visible;
+}
+
+/* (duplicate block removed) */
 
 /* Content card inside the mat */
 #game-container > div, #game-container > input, #game-container > button, #game-container h1, #game-container p, #game-container #result-display{
   margin-bottom:12px;
 }
 
-#game-container h1{margin:0 0 6px 0}
-#game-container p{margin:0 0 12px 0;color:var(--muted)}
+#game-container h1 {
+  margin:0 0 4px 0;
+}
+#game-container p {
+  margin:0 0 12px 0;
+  color:var(--muted);
+}
 
 /* smaller, less-wide guess input; center the text so numbers look tidy */
 input[type=text], input[type=number]{padding:12px 14px;font-size:1.05rem;border-radius:0;border:2px solid #28a745;margin-right:0;min-width:180px;text-align:center;background:white}
@@ -109,6 +171,11 @@ button, input[type=text], input[type=number]{ display:inline-flex; align-items:c
 @media (max-width:700px){
   .frame::after{inset:14px}
   .frame > #game-container{width:100%}
+  /* enable internal scrolling on small screens but hide the scrollbar visually */
+  .frame > #game-container{ max-height: calc(100vh - 40px); overflow:auto; }
+  .frame > #game-container::-webkit-scrollbar{ display:none }
+  .frame > #game-container{ -ms-overflow-style: none; scrollbar-width: none }
+  .artwork .round-indicator{ top:-36px; padding:4px 8px; font-size:0.92rem; max-width:90% }
 }
 
 button::before{ content:''; position:absolute; left:0; top:0; bottom:0; width:2px; background:#28a745 }
@@ -146,7 +213,7 @@ button::before{ content:''; position:absolute; left:0; top:0; bottom:0; width:2p
 .artwork{ text-align:center; max-width:760px; margin:0 auto }
 .artwork .art-image{ margin-top:10px; background: #fff; padding:8px; border-radius:6px; display:flex; align-items:center; justify-content:center; height:380px; width:100%; overflow:hidden; position:relative }
 .artwork .art-image img{ max-width:100%; max-height:100%; object-fit:contain; display:block }
-.artwork h2{ margin:0; font-size:1.25rem }
+.artwork h2{ margin:12px 0 0 0; font-size:1.25rem }
 .muted{ color:var(--muted); margin-top:6px }
 
 .guess-area label{ display:block; font-weight:600; margin-bottom:6px }
