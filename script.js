@@ -1,3 +1,4 @@
+// https://gwpa.no/nb/auctions
 const artworks = [
 	{
 		title: 'Nattkafé',
