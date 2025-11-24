@@ -84,7 +84,7 @@ function showResult(guess){
 		  <div class="result-body">
 		    <div>Ditt gjett: <strong>${formatCurrency(guess)}</strong></div>
 		    <div>Riktig pris: <strong>${formatCurrency(actual)}</strong></div>
-		    <div>Du fikk: <strong>${pointsThisRound}</strong> poeng</div>
+		    <div>Du fikk: <strong>${pointsThisRound}/1000</strong> poeng</div>
 		  </div>
 		  <div class="overlay-actions"><button id="next-round">${isLast ? 'Fullfør' : 'Neste'}</button></div>
 		`;
@@ -103,7 +103,7 @@ function showResult(guess){
 }
 
 function showFinalSummary(){
-	const message = `<strong>Spillet er ferdig</strong><br/>Runder: ${totalRounds}<br/>Poeng total: ${totalPoints}`;
+	const message = `<strong>Spillet er ferdig</strong><br/>Runder: ${totalRounds}<br/>Poeng total: ${totalPoints}/5000`;
 	if (overlay) {
 		overlay.innerHTML = `<div class="result-body">${message}</div><div class="overlay-actions"><button id="restart-game">Spill igjen</button></div>`;
 		overlay.classList.remove('hidden');
