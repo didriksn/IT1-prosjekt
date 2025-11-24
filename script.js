@@ -63,57 +63,53 @@ function loadArtwork(index){
 	artImg.src = artwork.image;
 	artImg.alt = `${artwork.title} by ${artwork.artist}`;
 	
-	if (roundNumEl) roundNumEl.textContent = String(index + 1);
-	if (overlay) overlay.classList.add('hidden');
-	if (guessInput) guessInput.value = '';
-
+	roundNumEl.textContent = index + 1;
+	overlay.classList.add('hidden');
+	guessInput.value = '';
 }
 
 function showResult(guess){
 	const actual = artworks[currentIndex].price;
 	const diff = Math.abs(guess - actual);
 
-	const ratio = actual > 0 ? Math.min(1, diff / actual) : 1;
+	const ratio = Math.min(1, diff / actual);
 	const pointsThisRound = Math.max(0, Math.round(1000 * (1 - ratio)));
 
 	totalPoints += pointsThisRound;
 
-	if (overlay) {
-		const isLast = currentIndex === totalRounds - 1;
-		overlay.innerHTML = `
-		  <div class="result-body">
-		    <div>Ditt gjett: <strong>${formatCurrency(guess)}</strong></div>
-		    <div>Riktig pris: <strong>${formatCurrency(actual)}</strong></div>
-		    <div>Du fikk: <strong>${pointsThisRound}/1000</strong> poeng</div>
-		  </div>
-		  <div class="overlay-actions"><button id="next-round">${isLast ? 'Fullfør' : 'Neste'}</button></div>
-		`;
-		overlay.classList.remove('hidden');
+	const isLast = currentIndex === totalRounds - 1;
+	overlay.innerHTML = `
+		<div class="result-body">
+		<div>Ditt gjett: <strong>${formatCurrency(guess)}</strong></div>
+		<div>Riktig pris: <strong>${formatCurrency(actual)}</strong></div>
+		<div>Du fikk: <strong>${pointsThisRound}/1000</strong> poeng</div>
+		</div>
+		<div class="overlay-actions"><button id="next-round">${isLast ? 'Fullfør' : 'Neste'}</button></div>
+	`;
+	overlay.classList.remove('hidden');
 
-		const nextBtn = document.getElementById('next-round');
-		nextBtn.addEventListener('click', ()=>{
-			if (!isLast) {
-				currentIndex += 1;
-				loadArtwork(currentIndex);
-			} else {
-				showFinalSummary();
-			}
-		});
-	}
+	const nextBtn = document.getElementById('next-round');
+	nextBtn.addEventListener('click', ()=>{
+		if (!isLast) {
+			currentIndex += 1;
+			loadArtwork(currentIndex);
+		} else {
+			showFinalSummary();
+		}
+	});
+	
 }
 
 function showFinalSummary(){
 	const message = `<strong>Spillet er ferdig</strong><br/>Runder: ${totalRounds}<br/>Poeng total: ${totalPoints}/5000`;
-	if (overlay) {
-		overlay.innerHTML = `<div class="result-body">${message}</div><div class="overlay-actions"><button id="restart-game">Spill igjen</button></div>`;
-		overlay.classList.remove('hidden');
-		const restart = document.getElementById('restart-game');
-		if (restart) restart.addEventListener('click', ()=>{
-			currentIndex = 0;
-			totalPoints = 0;
-			loadArtwork(currentIndex);
-		});
-	}
+	overlay.innerHTML = `<div class="result-body">${message}</div><div class="overlay-actions"><button id="restart-game">Spill igjen</button></div>`;
+	overlay.classList.remove('hidden');
+	const restart = document.getElementById('restart-game');
+	if (restart) restart.addEventListener('click', ()=>{
+		currentIndex = 0;
+		totalPoints = 0;
+		loadArtwork(currentIndex);
+	});
 }
 
 function parseGuess(value){
@@ -125,10 +121,8 @@ function parseGuess(value){
 submitBtn.addEventListener('click', () => {
 	const val = parseGuess(guessInput.value);
 	if (!Number.isFinite(val) || val < 0) {
-		if (overlay) {
-			overlay.innerHTML = 'Vennligst skriv inn et gyldig ikke-negativt tall.';
-			overlay.classList.remove('hidden');
-		}
+		overlay.innerHTML = 'Vennligst skriv inn et gyldig ikke-negativt tall.';
+		overlay.classList.remove('hidden');
 		return;
 	}
 	showResult(val);
@@ -148,12 +142,12 @@ guessInput.addEventListener('keydown', (e)=>{
 	const nextBtn = document.getElementById('next-round');
 	const restartBtn = document.getElementById('restart-game');
 	const target = nextBtn || restartBtn;
-	if (target) target.click();
+	target.click();
 });
 
-
+// Regex
 guessInput.addEventListener('input', ()=>{
-	if (overlay) overlay.classList.add('hidden');
+	overlay.classList.add('hidden');
 	const raw = guessInput.value;
 	let digits = raw.replace(/\D+/g, '');
 	digits = digits.replace(/^0+/, '');
@@ -164,11 +158,9 @@ guessInput.addEventListener('input', ()=>{
 
 	const formatted = digits.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 	guessInput.value = `kr ${formatted}`;
-	guessInput.setSelectionRange(guessInput.value.length, guessInput.value.length);
 });
 
 
-if (totalRoundsEl) {
-	totalRoundsEl.textContent = String(totalRounds);
-}
+
+totalRoundsEl.textContent = String(totalRounds);
 loadArtwork(currentIndex);
